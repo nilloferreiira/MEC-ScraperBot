@@ -1,6 +1,7 @@
 import fastify from "fastify"
 import cors from "@fastify/cors"
-import { getData } from "./routes/get-data"
+import { getFeaturedNewsRoute } from "./routes/get-featured-mec-news"
+import { getLatestNewsRoute } from "./routes/get-latest-mec-news"
 
 const app = fastify()
 
@@ -8,10 +9,11 @@ app.register(cors, {
   origin: true
 })
 
-app.register(getData)
+app.register(getFeaturedNewsRoute)
+app.register(getLatestNewsRoute)
 
 app.get("/", async () => {
-  return "API online"
+  return "API online! try /latest-news or /featured-news"
 })
 
 app

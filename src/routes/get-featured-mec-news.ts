@@ -1,18 +1,18 @@
 import { FastifyInstance } from "fastify"
 import { webScrapping } from "../utils/web-scrapping"
 
-export async function getData(app: FastifyInstance) {
-  app.get("/get-data", async () => {
+export async function getFeaturedNewsRoute(app: FastifyInstance) {
+  app.get("/featured-news", async () => {
     try {
       console.log("Trying fetching data...")
-      const LatestMECNews = await webScrapping.getLatestMECNews()
-      if (LatestMECNews.Error?.status === 400) {
+      const featuredNews = await webScrapping.getFeaturedMECNews()
+      if (featuredNews.Error?.status === 400) {
         return { error: "Failed to fetch latest MEC news" }
       }
 
       console.log("Data fetched.")
 
-      return LatestMECNews
+      return featuredNews
     } catch (error) {
       console.log(error)
       return { error: "An error occurred while fetching latest MEC news" }

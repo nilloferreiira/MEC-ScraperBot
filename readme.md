@@ -2,7 +2,9 @@
 
 ## Funcionalidades
 
-- A rota get-data faz um web scraping no site do MEC e pega a última notícia em destaque e então a retorna no formato de JSON.
+- A rota /latest-news faz um web scraping no site do MEC e pega a última notícia publicada no portal e então a retorna no formato de JSON.
+
+- A rota /featured-news faz um web scraping no site do MEC e pega a última notícia em destaque e então a retorna no formato de JSON.
 
 ## Instalação
 

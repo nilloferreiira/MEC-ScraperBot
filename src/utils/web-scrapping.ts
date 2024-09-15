@@ -1,12 +1,10 @@
 import * as cheerio from "cheerio"
 import axios from "axios"
 
-const getLatestMECNews = async () => {
+const getFeaturedMECNews = async () => {
   try {
     // Esta url esta pegando a ultima noticia em destaque
     const { data } = await axios.get("https://www.gov.br/mec/pt-br")
-    // Possivel atualizacao da url para pegar literalmente a noticia mais recente possivel
-    //   "https://www.gov.br/mec/pt-br/assuntos/noticias"
 
     const $ = cheerio.load(data)
 
@@ -50,4 +48,54 @@ const getLatestMECNews = async () => {
   }
 }
 
-export const webScrapping = { getLatestMECNews }
+const getLatestMECNews = async () => {
+  try {
+    // Esta url pega a noticia mais recente
+    const { data } = await axios.get(
+      "https://www.gov.br/mec/pt-br/assuntos/noticias"
+    )
+
+    const $ = cheerio.load(data)
+
+    // alterar para pegar a primeira de todas
+    const linkNoticia = $(".noticias li .titulo a").first().attr("href")
+
+    if (!linkNoticia) {
+      return {
+        Error: {
+          status: 400,
+          msg: "Não foi possível selecionar o link da notícia"
+        }
+      }
+    }
+    // Abre a noticia mais recente
+    const { data: noticiaHtml } = await axios.get(linkNoticia!)
+    const $noticia = cheerio.load(noticiaHtml)
+
+    const titulo = $noticia("h1").text().trim()
+    const subtitulo = $noticia("div.documentDescription").text().trim()
+    // Pega o conteudo html da parte da noticia para filtrar apenas o texto
+    const conteudoHtml = $noticia("#parent-fieldname-text").html()
+
+    if (!conteudoHtml) {
+      throw new Error("Conteúdo da notícia não encontrado")
+    }
+
+    const $conteudo = cheerio.load(conteudoHtml)
+
+    // Extrai e limpa o texto
+    const textoLimpo = $conteudo.text().trim()
+
+    return {
+      titulo,
+      subtitulo,
+      corpo: textoLimpo,
+      url: linkNoticia
+    }
+  } catch (error) {
+    console.error("Erro ao acessar o site do MEC:", error)
+    return { error: "Erro ao acessar o site do MEC" }
+  }
+}
+
+export const webScrapping = { getFeaturedMECNews, getLatestMECNews }
