@@ -19,11 +19,13 @@ const getFeaturedMECNews = async () => {
       }
     }
     // Abre a noticia mais recente
-    const { data: noticiaHtml } = await axios.get(newsLink!)
-    const $news = cheerio.load(noticiaHtml)
+    const { data: newsHtml } = await axios.get(newsLink!)
+    const $news = cheerio.load(newsHtml)
 
     const title = $news("h1").text().trim()
     const subtitle = $news("div.documentDescription").text().trim()
+    const PublishedDate = $news("span.documentPublished .value").text().trim()
+
     // Pega o conteudo html da parte da noticia para filtrar apenas o texto
     const htmlContent = $news("#parent-fieldname-text").html()
 
@@ -40,6 +42,7 @@ const getFeaturedMECNews = async () => {
       titulo: title,
       subtitulo: subtitle,
       corpo: newsContent,
+      data: PublishedDate,
       url: newsLink
     }
   } catch (error) {
@@ -58,9 +61,9 @@ const getLatestMECNews = async () => {
     const $ = cheerio.load(data)
 
     // alterar para pegar a primeira de todas
-    const linkNoticia = $(".noticias li .titulo a").first().attr("href")
+    const newsLink = $(".noticias li .titulo a").first().attr("href")
 
-    if (!linkNoticia) {
+    if (!newsLink) {
       return {
         Error: {
           status: 400,
@@ -69,28 +72,31 @@ const getLatestMECNews = async () => {
       }
     }
     // Abre a noticia mais recente
-    const { data: noticiaHtml } = await axios.get(linkNoticia!)
-    const $noticia = cheerio.load(noticiaHtml)
+    const { data: newsHtml } = await axios.get(newsLink!)
+    const $news = cheerio.load(newsHtml)
 
-    const titulo = $noticia("h1").text().trim()
-    const subtitulo = $noticia("div.documentDescription").text().trim()
+    const title = $news("h1").text().trim()
+    const subtitle = $news("div.documentDescription").text().trim()
+    const PublishedDate = $news("span.documentPublished .value").text().trim()
+
     // Pega o conteudo html da parte da noticia para filtrar apenas o texto
-    const conteudoHtml = $noticia("#parent-fieldname-text").html()
+    const contentHtml = $news("#parent-fieldname-text").html()
 
-    if (!conteudoHtml) {
+    if (!contentHtml) {
       throw new Error("Conteúdo da notícia não encontrado")
     }
 
-    const $conteudo = cheerio.load(conteudoHtml)
+    const $content = cheerio.load(contentHtml)
 
     // Extrai e limpa o texto
-    const textoLimpo = $conteudo.text().trim()
+    const newsContent = $content.text().trim()
 
     return {
-      titulo,
-      subtitulo,
-      corpo: textoLimpo,
-      url: linkNoticia
+      titulo: title,
+      subtitulo: subtitle,
+      corpo: newsContent,
+      data: PublishedDate,
+      url: newsLink
     }
   } catch (error) {
     console.error("Erro ao acessar o site do MEC:", error)
