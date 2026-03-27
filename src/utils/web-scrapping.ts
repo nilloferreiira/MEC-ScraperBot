@@ -10,12 +10,13 @@ const getFeaturedMECNews = async () => {
 		const { data } = await axios.get("https://www.gov.br/mec/pt-br", {
 			httpsAgent: insecureAgent,
 			headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,all;q=0.8',
-                'Accept-Language': 'pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7',
-                'Referer': 'https://www.google.com/',
-                'Cache-Control': 'no-cache'
-            }
+				"User-Agent":
+					"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+				Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,all;q=0.8",
+				"Accept-Language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+				Referer: "https://www.google.com/",
+				"Cache-Control": "no-cache"
+			}
 		})
 
 		const $ = cheerio.load(data)
@@ -32,7 +33,15 @@ const getFeaturedMECNews = async () => {
 		}
 		// Abre a noticia mais recente
 		const { data: newsHtml } = await axios.get(newsLink!, {
-			httpsAgent: insecureAgent
+			httpsAgent: insecureAgent,
+			headers: {
+				"User-Agent":
+					"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36",
+				Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+				"Accept-Language": "pt-BR,pt;q=0.9,en;q=0.8",
+				Connection: "keep-alive",
+				"Upgrade-Insecure-Requests": "1"
+			}
 		})
 		const $news = cheerio.load(newsHtml)
 
@@ -68,19 +77,18 @@ const getFeaturedMECNews = async () => {
 const getLatestMECNews = async () => {
 	try {
 		// Esta url pega a noticia mais recente
-		const { data } = await axios.get(
-			"https://www.gov.br/mec/pt-br/assuntos/noticias",
-			{
-				httpsAgent: insecureAgent,
-				headers: {
-	                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-	                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,all;q=0.8',
-	                'Accept-Language': 'pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7',
-	                'Referer': 'https://www.google.com/',
-	                'Cache-Control': 'no-cache'
-	            }
+		const { data } = await axios.get("https://www.gov.br/mec/pt-br/assuntos/noticias", {
+			httpsAgent: insecureAgent,
+			withCredentials: true,
+			headers: {
+				"User-Agent":
+					"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36",
+				Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+				"Accept-Language": "pt-BR,pt;q=0.9,en;q=0.8",
+				Connection: "keep-alive",
+				"Upgrade-Insecure-Requests": "1"
 			}
-		)
+		})
 
 		const $ = cheerio.load(data)
 
@@ -97,7 +105,16 @@ const getLatestMECNews = async () => {
 		}
 		// Abre a noticia mais recente
 		const { data: newsHtml } = await axios.get(newsLink!, {
-			httpsAgent: insecureAgent
+			httpsAgent: insecureAgent,
+			withCredentials: true,
+			headers: {
+				"User-Agent":
+					"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36",
+				Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+				"Accept-Language": "pt-BR,pt;q=0.9,en;q=0.8",
+				Connection: "keep-alive",
+				"Upgrade-Insecure-Requests": "1"
+			}
 		})
 		const $news = cheerio.load(newsHtml)
 
